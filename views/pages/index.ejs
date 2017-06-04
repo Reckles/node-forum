@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <% include ../partials/head %>
+
+     
+    </head>
+    <body>
+
+        <header>
+            <% include ../partials/header %>
+        </header>
+
+        <ul class="posts-list">
+            <% posts.forEach(function(post){%>
+            <li>
+                <div class="post-box">
+                    <h4 id="user-name">
+                        <%= post.user %>
+                    </h4>           
+                    <div class="post-body">
+                        <h3 id="postTitle">
+                            <%= post.title %>
+                        </h3>
+                        <p id="post">
+                            <%= post.text %>
+                        </p>
+                    </div>
+                    <h6 id="post-time">
+                        <%= post.createdAt %>
+                    </h6>
+                    <div class="post-footer">
+                        <button id="newComment">Leave a comment</button>
+                        <button id="seeComment">See comments</button>
+                    </div>
+                </div>
+            </li>
+            <% });%>
+        </ul>
+ 
+    </body>
+
+    <footer>
+        <% include ../partials/footer %>
+    </footer>
+</html>

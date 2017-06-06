@@ -37,29 +37,29 @@ const fillData = (callback) => {
         text: "some rendom text for the post , and some more text ti fill the paragraf",
         createdAt: new Date(),
         editedAt: '',
-        comments: {
-           comment1: {
+        comments:[ 
+            {
              commenterId: '1122255454488855sddad4as',
              userName: 'Tolik',
              text: 'I commentin on Yosis post',
              createdAt: new Date(),
              editedAt: ''
            },
-           comment2: {
+            {
              commenterId: '22sd122255454488855sddad4as',
              userName: 'Amir',
              text: 'Not a commentin on Yosis post',
              createdAt: new Date(),
              editedAt: ''
            },
-           comment3: {
+            {
              commenterId: '11222df5sddad4as',
              userName: 'Eli',
              text: 'I commentin on Yosis post',
              createdAt: new Date(),
              editedAt: ''
            }
-        }
+        ]
     }   
     ], callback);
 }

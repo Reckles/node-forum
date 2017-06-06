@@ -9,11 +9,6 @@ const getHome = () => {
 
 const getPost = (postId) => { 
     return repositoryPosts.findOne(postId)
-
-    // return Promise.all([repositoryPosts.findOne(postId), repositoryPosts.findAll()])
-    // .then(([post, allPosts]) => {
-
-    // });
 }
 
 

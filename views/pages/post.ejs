@@ -10,22 +10,35 @@
         </header>
 
         <div class="post-box">
-                    <h4 id="user-name">
-                        <%= post.user %>
+                    <h4>
+                        <%= post.userName %>
                     </h4>           
                     <div class="post-body">
-                        <h3 id="postTitle">
+                        <h3>
                             <%= post.title %>
                         </h3>
-                        <p id="post">
+                        <p>
                             <%= post.text %>
                         </p>
                     </div>
-                    <h6 id="post-time">
+                    <h6>
                         <%= post.createdAt %>
                     </h6>
                     <div class="post-comments">
-                     
+                        <ul>
+                            <h4>Comments</h4>
+                            <% post.comments.forEach(function(comment){%>
+                                <li>
+                                    <div class="comment-box">
+                                        <h4>
+                                            <%= comment.userName%>
+                                        </h4>
+                                        <p><%= comment.text%></p>
+                                        <h6><%= comment.createdAt%></h6>
+                                    </div>
+                                </li>
+                            <% });%>                         
+                        </ul>
                     </div>
                     <div class="post-footer">
                         <button id="newComment" onclick="btnNewComment()" data-id="<%= post._id%>">Leave a comment</button>

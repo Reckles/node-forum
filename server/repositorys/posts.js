@@ -3,28 +3,64 @@ const moment = require('moment');
 
 
 const helper = require('mongoskin').helper;
-// const findAll = (callback) => {
-//     db.collection('posts').find().toArray( (err, result) => {
-//         callback(err, result);        
-//     });
-// };
-const findAll = (callback) => {
-    db.find().toArray(callback);
+
+const findAll = () => {
+    return new Promise((resolve, reject) => {
+      db.find().toArray((err, result) => {
+        if (err) {
+            reject(err)
+        } else {
+            resolve(result)
+        }
+      });
+    });
 };
 
-const findOne = (postId, callback) => { 
-    db.findOne({ _id: helper.toObjectID(postId)}, callback);
+const findOne = (postId) => { 
+    return new Promise((resolve, reject) => {
+        db.findOne({ _id: helper.toObjectID(postId)}, (err, result) => {
+        if (err) {
+            reject(err)
+        } else {
+            resolve(result)
+        }
+      });
+    })
+
 }
 
 const fillData = (callback) => {
     db.insert([
     {
-        user: "Yosi",
+        userName: "Yosi",
         title: "This is a new post",
         text: "some rendom text for the post , and some more text ti fill the paragraf",
         createdAt: new Date(),
-        editedAt: ''
-    },   
+        editedAt: '',
+        comments: {
+           comment1: {
+             commenterId: '1122255454488855sddad4as',
+             userName: 'Tolik',
+             text: 'I commentin on Yosis post',
+             createdAt: new Date(),
+             editedAt: ''
+           },
+           comment2: {
+             commenterId: '22sd122255454488855sddad4as',
+             userName: 'Amir',
+             text: 'Not a commentin on Yosis post',
+             createdAt: new Date(),
+             editedAt: ''
+           },
+           comment3: {
+             commenterId: '11222df5sddad4as',
+             userName: 'Eli',
+             text: 'I commentin on Yosis post',
+             createdAt: new Date(),
+             editedAt: ''
+           }
+        }
+    }   
     ], callback);
 }
 

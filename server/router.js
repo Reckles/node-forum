@@ -4,7 +4,7 @@ const db = require('mongoskin').db('mongodb://localhost:27017/forum');
 
 
 const repositoryPosts = require('./repositorys/posts');
-const server = require('./server');
+const logic = require('./logic');
 const app = express();
 
 
@@ -13,30 +13,29 @@ app.set('view engine', 'ejs');
 
 
 app.get('/', (req, res)=>{
-    server.getHome((err,posts)=>{
-        if(err) {
-            return console.log('Error', err);
-        } else {
-            res.render('pages/index', {posts});
-        }
-    });
+    logic.getHome()
+    .then(posts => {
+        res.render('pages/index', {posts});
+    })
+    .catch(err=>{
+        res.render('pages/error')
+    })
 });
 
-app.get('/post', (req, res)=>{
-    server.getPost(req.query.id, (err, result)=>{
-        if(err) {
-            return console.log("cant find post");
-        } else {
-            var post = result;            
-            res.render('pages/post', {post})
-        }
-    });
+app.get('/post', (req, res) => {
+    logic.getPost(req.query.id)
+    .then(post =>{
+        res.render('pages/post', {post})
+    })
+    .catch(err => {
+        res.render('pages/error')
+    })         
 });
 
 
 app.get('/fill', (req, res)=>{
 
-    server.getFill((err, result)=>{
+    logic.getFill((err, result)=>{
         if(err) {
             return console.log('Cant fill DB : ', err );
         } else {
@@ -46,7 +45,7 @@ app.get('/fill', (req, res)=>{
 });
 
 app.get('/about', ( req, res )=>{
-         res.render('pages/about');
+     res.render('pages/about');
   
 });
 

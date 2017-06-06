@@ -3,15 +3,19 @@ const repositoryPosts = require('./repositorys/posts');
 const router = require('./router');
 
 
-const getHome = (callback)=>{
-    repositoryPosts.findAll(callback)
+const getHome = () => {
+    return repositoryPosts.findAll()
 }
 
-const getPost = (postId,callback)=>{
-    repositoryPosts.findOne(postId, callback)
-    //To implement comments 
-    // repositoryPosts.find()
+const getPost = (postId) => { 
+    return repositoryPosts.findOne(postId)
+
+    // return Promise.all([repositoryPosts.findOne(postId), repositoryPosts.findAll()])
+    // .then(([post, allPosts]) => {
+
+    // });
 }
+
 
 const getFill = (callback)=>{
     repositoryPosts.fillData(callback)

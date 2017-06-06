@@ -9,8 +9,8 @@ const app = express();
 
 
 app.use(express.static('public'))
-
 app.set('view engine', 'ejs');
+
 
 app.get('/', (req, res)=>{
     server.getHome((err,posts)=>{
@@ -22,9 +22,21 @@ app.get('/', (req, res)=>{
     });
 });
 
+app.get('/post', (req, res)=>{
+    server.getPost(req.query.id, (err, result)=>{
+        if(err) {
+            return console.log("cant find post");
+        } else {
+            var post = result;            
+            res.render('pages/post', {post})
+        }
+    });
+});
+
+
 app.get('/fill', (req, res)=>{
 
-    server.getFill((err, resoult)=>{
+    server.getFill((err, result)=>{
         if(err) {
             return console.log('Cant fill DB : ', err );
         } else {
@@ -33,8 +45,9 @@ app.get('/fill', (req, res)=>{
     });
 });
 
-app.get('/about', ( req, res ) => {
-    res.render('pages/about');
+app.get('/about', ( req, res )=>{
+         res.render('pages/about');
+  
 });
 
 app.listen(8000, () =>{

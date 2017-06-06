@@ -3,18 +3,13 @@
 <html>
     <head>
         <% include ../partials/head %>
-        <script src="js/pages/index.js"></script>
     </head>
     <body>
-
         <header>
             <% include ../partials/header %>
         </header>
 
-        <ul class="posts-list">
-            <% posts.forEach(function(post){%>
-            <li>
-                <div class="post-box">
+        <div class="post-box">
                     <h4 id="user-name">
                         <%= post.user %>
                     </h4>           
@@ -29,20 +24,15 @@
                     <h6 id="post-time">
                         <%= post.createdAt %>
                     </h6>
+                    <div class="post-comments">
+                     
+                    </div>
                     <div class="post-footer">
                         <button id="newComment" onclick="btnNewComment()" data-id="<%= post._id%>">Leave a comment</button>
-                        <button id="seeComment" onclick="btnSeeComment()" data-id="<%= post._id%>">See comments</button>
                     </div>
                 </div>
-            </li>
-            <% });%>
-        </ul>
- 
+
+        <script src="/js/jquery-3.2.1.min.js"></script>
+        <% include ../partials/footer%>
     </body>
-
-    <footer>
-        <% include ../partials/footer %>
-    </footer>
-
-  
 </html>

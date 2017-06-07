@@ -38,6 +38,15 @@ app.get('/post', (req, res) => {
     })         
 });
 
+app.post('/newPost', (req,res) => {
+    logic.postNewPost(req.body.data)
+    .then(resulte => {
+         res.redirect('/');    
+    }).catch(err => {
+      res.render('pages/error')
+    })
+})
+
 
 app.post('/comment', (req, res) => {
     logic.postComment(req.body.data)   

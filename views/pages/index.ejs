@@ -10,7 +10,8 @@
         <header>
             <% include ../partials/header %>
         </header>
-
+        <br>
+        <button id="btnNewPost" onclick="newPost()" data-user="">Create new post</button>
         <ul class="posts-list">
             <% posts.forEach(function(post){%>
             <li>
@@ -30,8 +31,8 @@
                         <%= post.createdAt %>
                     </h6>
                     <div class="post-footer">
-                        <button id="newComment" onclick="btnNewComment()" data-id="<%= post._id%>">Leave a comment</button>
-                        <button id="seeComment" onclick="btnSeeComment()" data-id="<%= post._id%>">See comments</button>
+                        <button  onclick="newPost('<%= post._id%>')" >Leave a comment</button>
+                        <button  onclick="seeComment('<%= post._id%>')" >See comments</button>
                     </div>
                 </div>
             </li>

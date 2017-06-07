@@ -31,13 +31,26 @@ const findOne = (postId) => {
 
 const update = (comment) => {
     return new Promise((resolve, reject) => {
-        db.update({_id: helper.toObjectID(comment.id)}, {$push: {comments: comment}}, (err, result) => {
+        db.update({_id: helper.toObjectID(comment.id)}, {
+            $push: {comments: comment}
+        }, (err, result) => {
             if(err) {
                 reject(err)
             } else {
                 resolve(result)
             }
         });
+    });
+}
+
+const insert = (data) => {
+    return new Promise((resolve, reject) => {
+        db.insert({
+            userName: data.userName,
+            title: data.title,
+            text: data.text,
+            createdAt: data.createdAt
+        })
     });
 }
 
@@ -81,5 +94,6 @@ module.exports = {
     findAll,
     findOne,
     update,
+    insert,
     fillData
 };

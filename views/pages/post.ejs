@@ -28,7 +28,7 @@
                     <div class="post-comments">
                         <h4>Comments</h4>
                             <ul>                         
-                              <% post.comments.forEach(function(comment){%>
+                              <% if(post.comments != null){ post.comments.forEach(function(comment){%>
                                     <li>
                                       <div class="comment-box">
                                         <h4>
@@ -38,11 +38,11 @@
                                         <h6><%= comment.createdAt%></h6>
                                         </div>
                                    </li>
-                              <% });%>                         
+                              <% })};%>                         
                            </ul>
                     </div>
                     <div class="post-footer">
-                        <button id="newComment" onclick="btnNewComment()" data-id="<%= post._id%>">Leave a comment</button>
+                        <button  onclick="newPost('<%= post._id%>')" >Leave a comment</button>
                          <a href="/"><button>Go back</button></a>
                     </div>
                 </div>

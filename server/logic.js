@@ -11,6 +11,11 @@ const getPost = (postId) => {
     return repositoryPosts.findOne(postId)   
 }
 
+const postNewPost = (data) => {
+    data.createdAt = new Date();
+    return repositoryPosts.insert(data);
+}
+
 const postComment = (comment) => {
     comment.createdAt = new Date();
     return repositoryPosts.update(comment)
@@ -25,5 +30,6 @@ module.exports = {
     getHome,
     getPost,
     postComment,
+    postNewPost,
     getFill
 };

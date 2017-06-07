@@ -25,8 +25,20 @@ const findOne = (postId) => {
             resolve(result)
         }
       });
-    })
+    });
 
+}
+
+const update = (comment) => {
+    return new Promise((resolve, reject) => {
+        db.update({_id: helper.toObjectID(comment.id)}, {$push: {comments: comment}}, (err, result) => {
+            if(err) {
+                reject(err)
+            } else {
+                resolve(result)
+            }
+        });
+    });
 }
 
 const fillData = (callback) => {
@@ -68,5 +80,6 @@ const fillData = (callback) => {
 module.exports = {
     findAll,
     findOne,
+    update,
     fillData
 };

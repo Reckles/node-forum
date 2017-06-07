@@ -8,7 +8,12 @@ const getHome = () => {
 }
 
 const getPost = (postId) => { 
-    return repositoryPosts.findOne(postId)
+    return repositoryPosts.findOne(postId)   
+}
+
+const postComment = (comment) => {
+    comment.createdAt = new Date();
+    return repositoryPosts.update(comment)
 }
 
 
@@ -19,5 +24,6 @@ const getFill = (callback)=>{
 module.exports = {
     getHome,
     getPost,
+    postComment,
     getFill
 };

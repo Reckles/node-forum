@@ -3,6 +3,7 @@
 <html>
     <head>
         <% include ../partials/head %>
+        <script src="js/pages/post.js"></script>
     </head>
     <body>
         <header>
@@ -25,23 +26,24 @@
                         <%= post.createdAt %>
                     </h6>
                     <div class="post-comments">
-                        <ul>
-                            <h4>Comments</h4>
-                            <% post.comments.forEach(function(comment){%>
-                                <li>
-                                    <div class="comment-box">
+                        <h4>Comments</h4>
+                            <ul>                         
+                              <% post.comments.forEach(function(comment){%>
+                                    <li>
+                                      <div class="comment-box">
                                         <h4>
                                             <%= comment.userName%>
                                         </h4>
                                         <p><%= comment.text%></p>
                                         <h6><%= comment.createdAt%></h6>
-                                    </div>
-                                </li>
-                            <% });%>                         
-                        </ul>
+                                        </div>
+                                   </li>
+                              <% });%>                         
+                           </ul>
                     </div>
                     <div class="post-footer">
                         <button id="newComment" onclick="btnNewComment()" data-id="<%= post._id%>">Leave a comment</button>
+                         <a href="/"><button>Go back</button></a>
                     </div>
                 </div>
 

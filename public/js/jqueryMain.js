@@ -9,7 +9,8 @@ function newPost (id) {
         <h5>Post title :</h5>
         <input type="text" name="title">
         <h5>Content :</h5>
-        <input type="text" name="text"><br><br>
+        <textarea cols="40" rows="10" name="text"></textarea>
+        <br><br>
         <a href="" onclick="sendPost('${id}')">Post </a>|
         <a href="/"> Back</a>
     </form>
@@ -19,7 +20,7 @@ function newPost (id) {
 
 function sendPost(id) {
     var title = $('input[name="title"]').val();
-    var text = $('input[name="text"').val();
+    var text = $('textarea[name="text"').val();
 
     //Some client side validetion
     if(title === '' || title === undefined){
@@ -31,11 +32,11 @@ function sendPost(id) {
     else {
        var data ={};
        //Determens if Post or Comment
-       if(id != ""){
+       if(id != " "){
           data.id = id;
           data.userName = 'Eli';
-          data.title = $('input[name="title"]').val();
-          data.text = $('input[name="text"').val();
+          data.title = title;
+          data.text = text;
        
          $.post('/comment', {data})
        } else{

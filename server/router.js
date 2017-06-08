@@ -2,6 +2,7 @@ const express = require('express');
 const moment = require('moment');
 const db = require('mongoskin').db('mongodb://localhost:27017/forum');
 
+
 const repositoryPosts = require('./repositorys/posts');
 const logic = require('./logic');
 const app = express();
@@ -10,14 +11,15 @@ const path = require('path');
 
 app.use(express.static('public'))
 app.set('view engine', 'ejs');
+//
 // app.set('view', path.join(__dirname, 'views'));
 // app.engine('ejs', engine);
-
+//
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
 
-
+//GET requests
 app.get('/', (req, res)=>{
     logic.getHome()
     .then(posts => {
@@ -38,6 +40,26 @@ app.get('/post', (req, res) => {
     })         
 });
 
+app.get('/about', ( req, res )=>{
+     res.render('./pages/about');
+});
+
+app.get('/register', (req, res)=>{
+    res.render('./pages/register', {title: 'Register'})
+});
+
+        //Fill data base inner use only
+app.get('/fill', (req, res)=>{
+    logic.getFill((err, result)=>{
+        if(err) {
+            return console.log('Cant fill DB : ', err );
+        } else {
+            res.send('Added to DB');
+        }
+    });
+});
+
+//POST requests
 app.post('/newPost', (req,res) => {
     logic.postNewPost(req.body.data)
     .then(resulte => {
@@ -46,7 +68,6 @@ app.post('/newPost', (req,res) => {
       res.render('pages/error')
     })
 })
-
 
 app.post('/comment', (req, res) => {
     logic.postComment(req.body.data)   
@@ -64,20 +85,16 @@ app.post('/comment', (req, res) => {
     })        
 });
 
-
-app.get('/fill', (req, res)=>{
-    logic.getFill((err, result)=>{
-        if(err) {
-            return console.log('Cant fill DB : ', err );
-        } else {
-            res.send('Added to DB');
-        }
-    });
+app.post('/register/user', (req, res)=>{
+    logic.postRegister(req.body)
+    .then(result => {
+        res.render('pages/login', {title: 'Registretion complite please login'})
+    })
+    .catch(err => {
+        res.render('pages/error')
+    })
 });
 
-app.get('/about', ( req, res )=>{
-     res.render('./pages/about');
-});
 
 app.listen(8000, () =>{
     console.log(`Started at port 8000`);

@@ -1,8 +1,8 @@
 const db = require('mongoskin').db('mongodb://localhost:27017/forum').collection('posts');
 const moment = require('moment');
 
-
 const helper = require('mongoskin').helper;
+
 
 const findAll = () => {
     return new Promise((resolve, reject) => {
@@ -50,10 +50,16 @@ const insert = (data) => {
             title: data.title,
             text: data.text,
             createdAt: data.createdAt
-        })
+        },(err, result) => {
+            if(err) {
+                reject(err)
+            } else {
+                resolve(result)
+            }
+        });
     });
 }
-
+    //Fill data base inner use only
 const fillData = (callback) => {
     db.insert([
     {

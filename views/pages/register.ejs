@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <% include ../partials/head %>
+    </head>
+    <body>
+        <header>
+            <% include ../partials/header %>
+        </header>
+        <h2><%= title%></h2>
+        <div>
+            <form action="/register/user" method="POST">
+                <div>
+                    <h6>Username :</h6>
+                    <input type="text" name="userName" placeholder="Usename">
+                </div>
+                <div>
+                    <h6>Email :</h6>
+                    <input type="text" name="email" placeholder="Email">
+                </div>
+                <div>
+                    <h6>Password :</h6>
+                    <input type="password" name="password" placeholder="Password">
+                </div>
+                <div>
+                    <h6>Conforme password :</h6>
+                    <input type="password" name="passwordMatch" placeholder="Password">
+                </div>
+                <br>
+                <input type="submit" value="Submit">
+            </form>
+        </div>
+
+        <script src="/js/jquery-3.2.1.min.js"></script>
+        <% include ../partials/footer%>
+    </body>
+</html>

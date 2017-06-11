@@ -8,9 +8,16 @@
         <header>
             <% include ../partials/header %>
         </header>
-
-       <h3>Error Page</h3>
-
+        <h2>Error Page</h2>
+        <ol>
+            <% if(errors){%>          
+             <% errors.forEach(function(err){%>
+              <li>
+                <%= err.msg%>
+              </li>
+            <%})%>
+            <%}%>
+        </ol>
         <script src="/js/jquery-3.2.1.min.js"></script>
         <% include ../partials/footer%>
     </body>

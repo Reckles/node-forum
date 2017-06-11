@@ -32,7 +32,7 @@ function sendPost(id) {
     else {
        var data ={};
        //Determens if Post or Comment
-       if(id != " "){
+       if(id != ""){
           data.id = id;
           data.userName = 'Eli';
           data.title = title;

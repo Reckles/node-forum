@@ -8,9 +8,20 @@
         <header>
             <% include ../partials/header %>
         </header>
-        <h2><%= title%></h2>
+        <% if(title){%>
+            <h2><%= title%></h2>
+            <%}%>
+        <ol>
+            <% if(errors){%>          
+             <% errors.forEach(function(err){%>
+              <li>
+                <%= err.msg%>
+              </li>
+            <%})%>
+            <%}%>
+        </ol>
         <div>
-            <form action="/register/user" method="POST">
+            <form method="POST" action="/register" >
                 <div>
                     <h6>Username :</h6>
                     <input type="text" name="userName" placeholder="Usename">

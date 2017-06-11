@@ -31,9 +31,10 @@
                               <% if(post.comments != null){ post.comments.forEach(function(comment){%>
                                     <li>
                                       <div class="comment-box">
-                                        <h4>
+                                        <h5>
                                             <%= comment.userName%>
-                                        </h4>
+                                        </h5>
+                                        <h4><%= comment.title%></h4>
                                         <p><%= comment.text%></p>
                                         <h6><%= comment.createdAt%></h6>
                                         </div>

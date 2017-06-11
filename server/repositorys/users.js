@@ -7,7 +7,7 @@ const helper = require('mongoskin').helper;
 
 const findById = (id) => {
     return new Promise((resolve, reject) => {
-        db.findById(id, (err, result) => {
+        db.findOne({_id: id}, (err, result) => {
         if (err) {
             reject(err)
         } else {
@@ -47,12 +47,15 @@ const register = (user) => {
     });
 }
 
-const comparePassword = (canddatePassword, hash, callback)=>{
-    bcrypt.compare(canddatePassword, hash, (err, isMatch)=>{
+const comparePassword = (canddatePassword, hash)=>{
+    return new Promise((resolve, reject)=>{
+        bcrypt.compare(canddatePassword, hash, (err, isMatch)=>{
         if(err){
-            throw err;
-        }
-        callback(null, isMatch);
+            reject(err);
+        } else{
+            resolve(isMatch);
+        }       
+      })
     })
 }
 

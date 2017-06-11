@@ -2,7 +2,6 @@ const express = require('express');
 const path = require('path');
 const cookieParser =require('cookie-parser');
 const bodyParser = require('body-parser');
-const expressValidator = require('express-validator');
 const flash = require('connect-flash');
 const session = require('express-session');
 const passport = require('passport');
@@ -16,86 +15,74 @@ const logic = require('./logic');
 
 const app = express();
 
-app.use(express.static(path.join(__dirname, '..', 'public')));
-
-app.set('views', path.join(__dirname, '..', 'views'));
-app.set('view engine', 'ejs');
-
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cookieParser());
-app.use(expressValidator());
-app.use(passport.initialize());
-
-//Passport
-app.use(passport.session());
 
 passport.serializeUser(function(user, done) {
     done(null, user)
 });
 
 passport.deserializeUser((user, done) => {
-    repositoryUsers.findById(id, (err, user) => {
-        done(err, user)
-    });
+           done(null, user)    
 });
 
-passport.use(new LocalStrategy(
-    function(email, password, done){
-        repositoryUser.findOne(email)
+app.use(express.static(path.join(__dirname, '..', 'public')));
+
+app.set('views', path.join(__dirname, '..', 'views'));
+app.set('view engine', 'ejs');
+
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser('secret'));
+
+
+app.use(session({
+    secret:'secret',
+    resave: false, saveUninitialized: false
+}));
+app.use(passport.initialize());
+
+//Passport
+app.use(passport.session());
+
+
+passport.use( new LocalStrategy( 
+    function(username, password, done){
+        repositoryUser.findOne(username)
         .then(user => {     
             if(!user){
-                return done(null, false, {message: 'Unkown user'});
+                return done(null, false, {message: 'Unkown user'});            
             }
-            repositoryUser.comparePassword(password, user.password, (err, isMatch)=>{
-                if(err){
-                    throw err;
-                }
-                if(isMatch){
-                    return done(null, user);
-                } else{
-                    return done(null, false, {message: 'invalid password'});
-                }
+            
+            repositoryUser.comparePassword(password, user.password)
+            .then(isMatch =>{
+             return done(null, user);
             })
         })
 }));
 
-app.use(session({
-    secret: 'secret',
-    saveUninitialized: true,
-    resave: true
-}));
-
-app.use(expressValidator({
-  errorFormatter: function(param, msg, value) {
-      var namespace = param.split('.')
-      , root    = namespace.shift()
-      , formParam = root;
-
-    while(namespace.length) {
-      formParam += '[' + namespace.shift() + ']';
+function ensureAuthenticated (req, res, next){
+    if(req.isAuthenticated()){
+         next()        
+    } else{
+        res.redirect('/login');
     }
-    return {
-      param : formParam,
-      msg   : msg,
-      value : value
-    };
-  }
-}));
+}
 
 //Flash messages
 app.use(flash());
 
-app.use((req, res, next)=>{
+//Global Vars
+app.use(function(req, res, next){
     res.locals.success_msg = req.flash('success_msg');
-    res.localserror_msg = (req.flash('error_msg'));
+    res.locals.error_msg = (req.flash('error_msg'));
     res.locals = req.flash('error');
+    res.locals.user = req.user || null;
     next();
 });
 
 
 //GET requests
-app.get('/', (req, res)=>{
+app.get('/',ensureAuthenticated, (req, res)=>{
     logic.getHome()
     .then(posts => {
         res.render('pages/index', {posts});
@@ -132,16 +119,6 @@ app.get('/logout', (req, res)=>{
     req.flash('success_msg, "you are logged out');
     resredirect('/login');
 })
-        //Fill data base inner use only
-app.get('/fill', (req, res)=>{
-    logic.getFill((err, result)=>{
-        if(err) {
-            return console.log('Cant fill DB : ', err );
-        } else {
-            res.send('Added to DB');
-        }
-    });
-});
 
 //POST requests
 app.post('/newPost', (req,res) => {

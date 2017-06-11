@@ -12,7 +12,7 @@
         <br>
         <button id="btnNewPost" onclick="newPost()" data-user="">Create new post</button>
         <ul class="posts-list">
-            <% posts.forEach(function(post){%>
+            <% posts.reverse().forEach(function(post){%>
             <li>
                 <div class="post-box">
                     <h4 id="user-name">

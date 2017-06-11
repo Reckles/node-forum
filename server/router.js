@@ -1,4 +1,5 @@
 const express = require('express');
+const expressValidator = require('express-validator');
 const path = require('path');
 const cookieParser =require('cookie-parser');
 const bodyParser = require('body-parser');
@@ -26,6 +27,8 @@ passport.deserializeUser((user, done) => {
 
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
+
+
 app.set('views', path.join(__dirname, '..', 'views'));
 app.set('view engine', 'ejs');
 
@@ -34,6 +37,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser('secret'));
 
+//User registration validator
+app.use(expressValidator());
 
 app.use(session({
     secret:'secret',
@@ -73,33 +78,43 @@ app.use(flash());
 
 //Global Vars
 app.use(function(req, res, next){
-    res.locals.success_msg = req.flash('success_msg');
-    res.locals.error_msg = (req.flash('error_msg'));
-    res.locals = req.flash('error');
-    res.locals.user = req.user || null;
+
+    try{
+        if(req.session.passport.user){
+        res.locals.user = req.session.passport.user
+        } 
+    } catch(err){
+        res.locals.user = null;
+    }
+ 
     next();
 });
 
 
 //GET requests
-app.get('/',ensureAuthenticated, (req, res)=>{
+app.get('/', ensureAuthenticated, (req, res)=>{
     logic.getHome()
     .then(posts => {
-        res.render('pages/index', {posts});
+        res.render('pages/index', {posts, user: res.locals.user});
     })
     .catch(err=>{
         res.render('pages/error', {errors: err})
     })
 });
 
-app.get('/post', (req, res) => {
-    logic.getPost(req.query.id)    
-    .then(post =>{
+app.get('/post', ensureAuthenticated, (req, res) => {
+    var postId = req.query.id;
+    if(postId){
+        logic.getPost(req.query.id)
+        .then(post =>{
         res.render('pages/post', {post})
-    })
-    .catch(err => {
+        })
+        .catch(err => {
         res.render('pages/error', {errors: err})
-    })         
+    })   
+    } else{
+        res.render('pages/error', {errors: null})
+     } 
 });
 
 app.get('/about', ( req, res )=>{
@@ -107,17 +122,17 @@ app.get('/about', ( req, res )=>{
 });
 
 app.get('/register', (req, res)=>{
-    res.render('pages/register', {title: 'Register', errors: null})
+    res.render('pages/register', {title: 'Register', errors: null, user: res.locals.user})
 });
 
 app.get('/login', (req, res) => {
-    res.render('pages/login', {title: 'Login'})
+    res.render('pages/login', {title: 'Login', user: res.locals.user})
 });
 
 app.get('/logout', (req, res)=>{
     req.logout();
     req.flash('success_msg, "you are logged out');
-    resredirect('/login');
+    res.redirect('/login');
 })
 
 //POST requests
@@ -152,7 +167,7 @@ app.post('/register', (req, res)=>{
         res.render('pages/login', {title: 'Registretion complite please login'})
     })
     .catch(err => {
-        res.render('pages/register', {title: 'Sorry wrong input try again', errors: err})
+        res.render('pages/register', {title: 'Sorry wrong input try again', errors: err, user: res.locals.user})
     })
 });
 

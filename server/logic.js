@@ -58,13 +58,19 @@ const postRegister = (req) => {
       req.checkBody('passwordMatch', 'Passwords do not match, please try again.').equals(req.body.password);   
      
 
-      const errors = req.validationErrors();
+      var errors = req.validationErrors();
 
       if(errors){
         reject(errors)        
      } else {
         user.userName = req.body.userName;
         user.email = req.body.email;
+        repositoryUsers.findOne(user.email)
+        .then(result=>{
+            if(result){
+                reject(errors= [{msg:'Email already exist'}])
+            }
+        });
         user.createdAt = new Date();
         user.password = encryptPassword(req.body.password)
         .then(result => {
@@ -86,5 +92,5 @@ module.exports = {
     postNewPost,
     postRegister,
     getFill,
-    encryptPassword,
+    encryptPassword
 };

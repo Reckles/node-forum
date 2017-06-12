@@ -19,16 +19,21 @@ const encryptPassword = (password) => {
 }
 
 //GET requests
-const getHome = () => {
-    return repositoryPosts.findAll()
+const getHome = (query) => {
+    if(query){     
+        return Promise.all([repositoryPosts.findSearchTitles(query), repositoryPosts.findSearchComments(query)])
+        .then(([postsWithTitle, postsWithUserName]) => {
+            return postsWithTitle.concat(postsWithUserName)
+        })
+        .catch(err => { reject(err)})               
+    } else {
+       return repositoryPosts.findAll()
+    }
+    
 }
 
 const getPost = (postId) => { 
     return repositoryPosts.findOne(postId)   
-}
-    //Fill data base inner use only
-const getFill = (callback)=>{
-    repositoryPosts.fillData(callback)
 }
 
 //POST requests 
@@ -91,6 +96,5 @@ module.exports = {
     postComment,
     postNewPost,
     postRegister,
-    getFill,
     encryptPassword
 };

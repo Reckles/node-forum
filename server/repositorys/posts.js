@@ -16,6 +16,30 @@ const findAll = () => {
     });
 };
 
+const findSearchTitles = (query) =>{
+     return new Promise((resolve, reject) => {
+        db.find({"title": query}).toArray((err, result) => {
+        if (err) {
+            reject(err)
+        } else {            
+            resolve(result)
+        }
+      });
+    });
+}
+const findSearchComments = (query) => {
+     return new Promise((resolve, reject) => {
+        db.find({"comments.text": query}).toArray((err, result) => {
+        if (err) {
+            reject(err)
+        } else {            
+            resolve(result)
+        }
+      });
+    });
+}
+
+
 const findOne = (postId) => { 
     return new Promise((resolve, reject) => {
         db.findOne({ _id: helper.toObjectID(postId)}, (err, result) => {
@@ -63,6 +87,8 @@ const insert = (data) => {
 
 module.exports = {
     findAll,
+    findSearchTitles,
+    findSearchComments,
     findOne,
     update,
     insert

@@ -90,16 +90,23 @@ app.use(function(req, res, next){
     next();
 });
 
-
 //GET requests
 app.get('/', ensureAuthenticated, (req, res)=>{
-    logic.getHome()
-    .then(posts => {
-        res.render('pages/index', {posts, user: res.locals.user});
-    })
-    .catch(err=>{
-        res.render('pages/error', {errors: err})
-    })
+    if(req.query.search) {
+        const regex = new RegExp(req.query.search.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&"), 'gi');
+        index(regex);
+    } else{
+        index();
+    }
+
+    function index(query){
+        logic.getHome(query)
+        .then(posts => {
+            res.render('pages/index', {posts, user: res.locals.user});
+        })
+        .catch(err=>{
+            res.render('pages/error', {errors: {err}})
+    })}
 });
 
 app.get('/post', ensureAuthenticated, (req, res) => {

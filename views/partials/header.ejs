@@ -1,21 +1,24 @@
 
-<nav>   
-    <div class="nav">
-        <a href="/">Home</a> |
-        <a href="/about">About</a> |
-        <% if(user){%>            
-            <a href="/logout">Hello <%= user.userName%> logout?</a>
-        <% } else{ %>   
-            <a href="/register">Register</a> |
-            <a href="/login">Login</a>
-        <% }%>
-    </div>
-    <div class="">
-          <form method="GET" action="/" >
-                <div>
-                    <input type="text" name="search" placeholder="Search...">
-                </div>        
-                <input type="submit" value="Submit">
-            </form>
+
+<nav class="uk-navbar">
+    <ul class="uk-navbar-nav">
+        <li><a class="uk-button " href="/">Home</a></li>
+        <li><a class="uk-button " href="/about">About</a></li>
+            <% if(user){%>            
+                <li><a class="uk-button " href="/logout">Hello <%= user.userName%> logout?</a></li>
+            <% } else{ %>   
+                <li><a class="uk-button " href="/register">Register</a></li>
+                <li><a class="uk-button " href="/login">Login</a></li>
+            <% }%>
+    </ul>
+    <div class="uk-navbar-flip">
+        <ul class="uk-navbar-nav">
+            <li>
+                <form class="uk-form search-box"  method="GET" action="/" >
+                  <input class="uk-form-row" type="text" name="search" placeholder="Search...">  
+                  <input type="submit" value="Submit" class="uk-button ">
+                </form>
+            </li>
+        </ul>          
     </div>
 </nav>

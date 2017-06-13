@@ -11,18 +11,14 @@
         <% if(title){%>
             <h2><%= title%></h2>
             <%}%>
-        <ol>
             <% if(errors){%>          
              <% errors.forEach(function(err){%>
-              <li>
-                <%= err.msg%>
-              </li>
+             <div class="uk-alert uk-alert-danger"><%= err.msg%></div>                           
             <%})%>
-            <%}%>
-        </ol>
+            <%}%>      
         <div>
-            <form method="POST" action="/register" >
-                <div>
+            <form method="POST" action="/register" class="uk-form">
+                <div class="uk-form-">
                     <h6>Username :</h6>
                     <input type="text" name="userName" placeholder="Usename">
                 </div>

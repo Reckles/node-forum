@@ -20,3 +20,39 @@
     border: 3px solid #ffffff;
 }
 
+.post-main-box{
+    width: 70vw;
+    height: 30vh;
+    border: 1px solid #e2e2e2;
+
+}
+
+.post-main-box .post-avatar{
+    height: 12vh;
+    width: 12vh;  
+    margin-top: 15px; 
+}
+
+.post-text{
+    overflow: hidden;
+    margin: 1vh 1vw 0 3vw;
+    max-height:13vh;
+}
+
+.post-commenters{
+    background:#8080ff;
+    height: 30vh;
+    width: 20vw;
+}
+
+.post-buttons{
+    margin:0 0 5vh 1vw;
+    
+}
+
+
+.search-box{
+    margin: 1.5vh 1vw 0 0;
+}
+
+

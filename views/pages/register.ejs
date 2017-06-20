@@ -1,45 +1,49 @@
 <!DOCTYPE html>
 
 <html>
-    <head>
+    <head class="uk-height-1-1">
         <% include ../partials/head %>
     </head>
-    <body>
-        <header>
-            <% include ../partials/header %>
-        </header>
-        <% if(title){%>
-            <h2><%= title%></h2>
-            <%}%>
-            <% if(errors){%>          
-             <% errors.forEach(function(err){%>
-             <div class="uk-alert uk-alert-danger"><%= err.msg%></div>                           
-            <%})%>
-            <%}%>      
-        <div>
-            <form method="POST" action="/register" class="uk-form">
-                <div class="uk-form-">
-                    <h6>Username :</h6>
-                    <input type="text" name="userName" placeholder="Usename">
-                </div>
-                <div>
-                    <h6>Email :</h6>
-                    <input type="text" name="email" placeholder="Email">
-                </div>
-                <div>
-                    <h6>Password :</h6>
-                    <input type="password" name="password" placeholder="Password">
-                </div>
-                <div>
-                    <h6>Conforme password :</h6>
-                    <input type="password" name="passwordMatch" placeholder="Password">
-                </div>
-                <br>
-                <input type="submit" value="Submit">
-            </form>
-        </div>
 
-        <script src="/js/jquery-3.2.1.min.js"></script>
-        <% include ../partials/footer%>
+      <body class="uk-height-1-1 ">
+         <header>
+            <% include ../partials/header %>
+        </header> 
+      
+        <div style="min-height:100vh;"  class="uk-panel uk-panel-box uk-form uk-vertical-align uk-text-center uk-height-1-1">
+            <div class="uk-vertical-align-middle" style="width: 300px;">
+                <form class="uk-panel uk-panel-box uk-form" method="POST" action="/register">
+                  <div class="uk-alarm uk-container">
+                    <% if(title){%>
+                        <h2><%= title%></h2>
+                    <%}%>
+                    <% if(error){%>          
+                    <% error.forEach(function(err){%>
+                        <div  class="uk-alert uk-alert-warning uk-container-center"><%= err.msg%></div>                           
+                    <%})%>
+                    <%}%>    
+                    </div>
+                    <div class="uk-form-row">
+                        <input class="uk-width-4-2 uk-form-large" type="text" name="userName" placeholder="Usename">
+                    </div>
+                      <div class="uk-form-row">
+                        <input class="uk-width-4-2 uk-form-large" type="text" name="email" placeholder="Email">
+                    </div>
+                      <div class="uk-form-row">
+                        <input class="uk-width-4-2 uk-form-large" type="password" name="password" placeholder="Password">
+                    </div>
+                    <div class="uk-form-row">
+                        <input class="uk-width-4-2 uk-form-large" type="password" name="passwordMatch" placeholder="Password">
+                    </div>
+                    <div class="uk-form-row">
+                        <input style="color:#ffffff" class="uk-width-1-2 uk-button uk-button-success uk-button-large" type="submit" value="Login">
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    <footer>
+        <% include ../partials/footer %>
+    </footer>    
     </body>
 </html>

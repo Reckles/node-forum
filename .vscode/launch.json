@@ -9,7 +9,7 @@
             "request": "launch",
             "protocol": "inspector",
             "name": "Launch Program",
-            "program": "${workspaceRoot}/server/router.js",
+            "program": "${workspaceRoot}/app.js",
             "env": {
                 "PORT":"8000"
             }

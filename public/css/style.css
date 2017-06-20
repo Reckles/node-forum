@@ -1,4 +1,5 @@
 
+/*popup box*/
 .new-message-box{
     position: absolute;
     top:0;
@@ -8,7 +9,6 @@
     height: 100vh;
     
 }
-
 .new-message-box form{
     position:relative;
     padding: 1vh 5vw 1vh;
@@ -19,31 +19,121 @@
     background-color:#d0dbce;
     border: 3px solid #ffffff;
 }
+/*post post*/
 
+/*post commenters*/
+.post-comments-box{
+    position: relative;
+    margin: 1vh 0 0vh 20vw;
+    width: 62.5vw;
+    height: 30vh;
+    border: 1px solid #e2e2e2;
+    overflow: hidden;
+}
+.comments-buttons{
+    margin: 0 0 0 -1vw;
+}
+.comment-text{   
+    padding:2vw;
+    overflow: scroll;
+    overflow-x: hidden;
+    height: 6vh;
+}
+.scroll-hider{
+    background-color:#ffffff;
+    position:absolute;
+    top:0;
+    right:0;
+    width: 12vw;
+    height:30vh;
+    content: "";
+}
+/*login / register*/
+
+/*index post*/
 .post-main-box{
     width: 70vw;
     height: 30vh;
     border: 1px solid #e2e2e2;
-
+    overflow: hidden;
+    box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
 }
-
 .post-main-box .post-avatar{
     height: 12vh;
     width: 12vh;  
     margin-top: 15px; 
 }
-
 .post-text{
     overflow: hidden;
     margin: 1vh 1vw 0 3vw;
     max-height:13vh;
+    max-width: 38vw;
+}
+.post-main-box p{
+    margin:0 0 0 1vw;
 }
 
+/*index commenters*/
 .post-commenters{
-    background:#8080ff;
+    /*background:#8080ff;*/
     height: 30vh;
     width: 20vw;
+    margin:0 -13vw 0 0 ;
+    overflow:hidden;
+    transition:all ease-in-out 1s;
+    border-left: rgba(0, 0, 0, 0.2) solid 1px;
 }
+.post-commenters-inner-box{
+    /*background:#d2d737;*/
+    overflow: scroll;
+    overflow-x: hidden;
+    height: 30vh;
+    margin: 0 -3vw 0 0;
+}
+.post-commenters:hover{
+    margin:0;
+}
+.post-commenters:hover .post-commenters-text{
+    margin:-5vh 0vw 0 4vw;
+}
+.post-commenters article{
+    cursor:pointer;
+    margin:0.5vw 1vh 0 0;
+}
+.post-commenters img{  
+    height: 5vh;
+    width: 5vh;
+    margin:1vh 1vh;
+    transition:all ease-in-out 1s;
+}
+.post-commenters-time{
+    font-size:8px;
+    margin: -1vh 3vw 0 0 ;
+    transition:all ease-in-out 1s;
+} 
+.post-commenters h6{
+    font-size:10px;
+    font-weight: bold;
+    margin:0;
+    transition:all ease-in-out 1s;
+}
+.post-commenters p{
+    font-size:10px;
+    margin: -1vh 0 0 0;
+}
+.post-commenters-text{
+    overflow: hidden;
+    height: 2vh;
+    margin:-5vh 0 0 10vw;
+    font-size: 10px;
+    transition:all ease-in-out 1s;
+} 
+
+/*post commenters*/
+.commenters-main-box{
+    margin:0 auto;
+}
+
 
 .post-buttons{
     margin:0 0 5vh 1vw;
@@ -53,6 +143,31 @@
 
 .search-box{
     margin: 1.5vh 1vw 0 0;
+}
+
+/*footer*/
+.footer{
+    color:#e8e8e8;
+    height:40vh;
+    background:rgba(0, 0, 0, 0.7);
+}
+.footer-inner{
+    text-align: center;
+    height:20vh;
+    background-color:rgba(0, 0, 0, 0.1);
+}
+.copyright{
+    margin: 10vh 0 0 10vw;
+}
+.footer a{
+    color:#e8e8e8;
+} 
+.footer a:hover{
+    text-decoration-style: none;
+    color:#c2cbda;
+}
+.footer-links{
+    padding-top:8vh;
 }
 
 

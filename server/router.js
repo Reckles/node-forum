@@ -1,3 +1,4 @@
+/*
 const express = require('express');
 const expressValidator = require('express-validator');
 const path = require('path');
@@ -22,7 +23,7 @@ passport.serializeUser(function(user, done) {
 });
 
 passport.deserializeUser((user, done) => {
-           done(null, user)    
+    done(null, user)    
 });
 
 app.use(express.static(path.join(__dirname, '..', 'public')));
@@ -44,6 +45,9 @@ app.use(session({
     secret:'secret',
     resave: false, saveUninitialized: false
 }));
+
+app.use(flash());
+
 app.use(passport.initialize());
 
 //Passport
@@ -60,7 +64,12 @@ passport.use( new LocalStrategy(
             
             repositoryUser.comparePassword(password, user.password)
             .then(isMatch =>{
-             return done(null, user);
+                if(isMatch){
+                    return done(null, user);
+                } else{
+                    return done(null, false, {message: 'Wrong username or passport'})
+
+                }           
             })
         })
 }));
@@ -73,12 +82,7 @@ function ensureAuthenticated (req, res, next){
     }
 }
 
-//Flash messages
-app.use(flash());
-
-//Global Vars
 app.use(function(req, res, next){
-
     try{
         if(req.session.passport.user){
         res.locals.user = req.session.passport.user
@@ -90,18 +94,19 @@ app.use(function(req, res, next){
     next();
 });
 
-//GET requests
+        //GET requests     
 app.get('/', ensureAuthenticated, (req, res)=>{
+
     if(req.query.search) {
         const regex = new RegExp(req.query.search.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&"), 'gi');
-        index(regex);
+        getIndex(regex);
     } else{
-        index();
+        getIndex();
     }
 
-    function index(query){
+    function getIndex(query){
         logic.getHome(query)
-        .then(posts => {
+        .then(posts => {   
             res.render('pages/index', {posts, user: res.locals.user});
         })
         .catch(err=>{
@@ -109,19 +114,39 @@ app.get('/', ensureAuthenticated, (req, res)=>{
     })}
 });
 
-app.get('/post', ensureAuthenticated, (req, res) => {
-    var postId = req.query.id;
-    if(postId){
-        logic.getPost(req.query.id)
+app.get('/post/:id', ensureAuthenticated, (req, res) => {   
+    if(req.params.id){
+        logic.getPost(req.params.id)
         .then(post =>{
-        res.render('pages/post', {post})
+            res.render('pages/post', {post, moment})
         })
         .catch(err => {
-        res.render('pages/error', {errors: err})
+            res.render('pages/error', {errors: err})
     })   
     } else{
         res.render('pages/error', {errors: null})
      } 
+});
+
+app.get('/post/:id/edit', ensureAuthenticated, (req, res) => {
+    var postId = req.params.id;
+    logic.getPost(postId)
+    .then(post=>{
+        res.json(post).send()
+    })
+    .catch(err=>{
+        res.status(400).send()
+    })
+});
+app.get('/post/comment/:id/edit', ensureAuthenticated, (req, res) => {
+    var commentId = req.params.id;
+    logic.getComment(commentId)
+    .then(comment=>{
+        res.json(comment).send()
+    })
+    .catch(err=>{
+        res.status(400).send()
+    })
 });
 
 app.get('/about', ( req, res )=>{
@@ -133,7 +158,7 @@ app.get('/register', (req, res)=>{
 });
 
 app.get('/login', (req, res) => {
-    res.render('pages/login', {title: 'Login', user: res.locals.user})
+    res.render('pages/login', {title: 'Login', user: res.locals.user, errors: null, user: res.locals.user})
 });
 
 app.get('/logout', (req, res)=>{
@@ -142,30 +167,54 @@ app.get('/logout', (req, res)=>{
     res.redirect('/login');
 })
 
-//POST requests
-app.post('/newPost', (req,res) => {
-    logic.postNewPost(req.body.data)
+        //POST requests
+app.post('/post', (req,res) => {
+    logic.postNewPost(req.body.data, req.user)
     .then(resulte => {
-         res.redirect('/');    
+         res.status(200).send();    
     }).catch(err => {
-      res.render('pages/error', {errors: err})
+         res.status(404).send()
     })
 })
 
-app.post('/comment', (req, res) => {
-    logic.postComment(req.body.data)   
+app.post('/post/:id/comment', (req, res) => {
+    logic.postComment(req.body.data, req.user)   
     .then(result =>{
-        if(result.result.n>1){
-            res.send(result.result.opt[0])
-        }
-        else {
-            res.status(500).send();
-        }
-        res.send('pages/post')
+        res.status(200).send();
     })  
     .catch(err => {
-        res.render('pages/error', {errors: err})
+        res.status(404).send()
     })        
+});
+
+app.post(`/post/comment/:id/edit`, (req, res) => {
+    logic.postEditComment(req.body.data, req.user._id)   
+    .then(result =>{
+        res.status(200).send();
+    })  
+    .catch(err => {
+        res.status(404).send()
+    })        
+});
+
+app.post('/post/:id', (req, res) => {
+    logic.postEditPost(req.body.data, req.user._id)
+    .then(result => {
+         res.status(200).send();  
+    })
+    .catch(err => {
+        res.status(404).send()
+    })
+});
+
+app.post('/post/:id/delete', (req, res) => {
+    logic.postDeletePost(req.params.id, req.user&&req.user._id)
+    .then(result => {
+        res.status(200).send();  
+    })
+    .catch(err => {
+        res.status(404).send()
+    })
 });
 
 app.post('/register', (req, res)=>{
@@ -180,7 +229,7 @@ app.post('/register', (req, res)=>{
 
 app.post('/login', passport.authenticate('local', {
     successRedirect: '/',
-    failureRedirect: '/about',
+    failureRedirect: '/login?error',
     failureFlash: true
     }),
     (req, res)=>{
@@ -191,3 +240,4 @@ app.post('/login', passport.authenticate('local', {
 app.listen(8000, () =>{
     console.log(`Started at port 8000`);
 });
+*/

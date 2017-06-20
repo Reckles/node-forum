@@ -3,22 +3,42 @@
 <html>
     <head>
         <% include ../partials/head %>
-        <script src="js/pages/index.js"></script>
     </head>
     <body>
         <header>
-            <% include ../partials/header %>
+            <% include ../partials/header%>
             <br>
-        <button id="btnNewPost" class="uk-button uk-button-success" onclick="newPost()" data-user="">Create new post</button>
-        <br><br>
-        </header>
-        
-            <% posts.reverse().forEach(function(post){%>
+        </header>  
+        <% include ../partials/modalMessageBox%> 
+        <button id="btnNewPost" style="margin:-1vh 0 1vh 13.4vw;" class="uk-button uk-button-success "> 
+         Create new post
+        </button>
+        <div style="min-height:100vh;margin-bottom:10vh;">
+            <% posts.forEach(function(post){%>
             <div class="uk-flex uk-grid">
                 <div class="uk-flex-order-first uk-container uk-container-center">
                     <div class="post-main-box">       
-                        <article style="max-height: 22vh;" class="uk-comment uk-clearfix ">
-                             <div class="post-commenters uk-align-medium-right"></div>
+                        <article style="max-height: 22vh;" class="uk-comment uk-clearfix ">    
+                             <div class="post-commenters uk-align-medium-right">
+                                 <div class="post-commenters-inner-box">
+                                 <% if(post.comments){%>
+                                        <%post.comments.forEach(function(comment){%>
+                                                <article onclick="seeComment('<%= post._id%>')" class="uk-flex uk-flex-column uk-comment">
+                                                    <header class="uk-comment-header">
+                                                        <img class="uk-comment-avatar" src="" alt="IMG">
+                                                        <h6 class="uk-comment-title"><%= comment.userName%></h6>
+                                                        <div class="uk-comment-meta post-commenters-time uk-align-medium-right"> 
+                                                            Posted 
+                                                            <time  class="timeago" datetime="<%= (new Date(comment.createdAt)).getTime()%>">Min ago</time >
+                                                        </div>
+                                                        <p class="uk-comment-title "><%= comment.title%></p>      
+                                                    </header>
+                                                    <div  class="post-commenters-text uk-comment-body"><%= comment.text%></div>
+                                                </article>
+                                        <% });%>
+                                 <% }%>
+                                 </div>
+                             </div>
                                 <div class="post-avatar-box">
                                      <img  class="uk-comment-avatar post-avatar" src="" alt="IMG">
                                 </div>
@@ -26,26 +46,33 @@
                                 <h3 class="uk-comment-title"><%= post.userName %></h3>
                                 <p class="uk-comment-title"><%= post.title %></p>
                                 <div  class="uk-comment-body post-text"><%= post.text %></div>
-                                 
                             </header>
                         </article>
                         <div class="post-buttons">
                             <h6 style="font-size: 10px;margin:0 0 1vh 2vw;" class="uk-comment-meta">
-                                Posted 19 Min ago , <%= post.comments?post.comments.length:'0'%> Comments 
+                                Posted 
+                                <time class="timeago" datetime="<%= (new Date(post.createdAt)).getTime()%>"></time ><%= post.createdAt%>, 
+                                <%= post.comments?post.comments.length:'0'%> Comments 
                                 </h6>
-                            <button class="uk-button uk-button-primary uk-button-small" onclick="newPost('<%= post._id%>')" >Leave a comment</button>
-                            <button class="uk-button uk-button-primary uk-button-small" onclick="seeComment('<%= post._id%>')" >See comments</button>
+                            <button class="uk-button uk-button-primary uk-button-small" onclick="newComment('<%= post._id%>')" >
+                            Leave a comment</button>
+                            <button class="uk-button uk-button-primary uk-button-small" onclick="seeComment('<%= post._id%>')" >
+                            See comments</button>
+                            <% if(post.creatorId.toString() === user._id){%>
+                            <button class="uk-button uk-button-primary uk-button-small" onclick="editPost('<%= post._id%>')">
+                            Edit post</button>
+                            <button class="uk-button uk-button-primary uk-button-small" onclick="deletePost('<%= post._id%>')" >
+                            Delete post</button>
+                            <%}%>
                         </div> 
                     </div>
+                </div>
+            </div>                             
+            <% });%> 
             </div>
-                </div>                             
-            <% });%>  
-
-    </body>
-
     <footer>
         <% include ../partials/footer %>
     </footer>
-
-  
+    </body>
+   
 </html>

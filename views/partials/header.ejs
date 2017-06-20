@@ -1,6 +1,6 @@
 
 
-<nav class="uk-navbar">
+<nav style="box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);" class="uk-navbar">
     <ul class="uk-navbar-nav">
         <li><a class="uk-button " href="/">Home</a></li>
         <li><a class="uk-button " href="/about">About</a></li>
@@ -13,10 +13,19 @@
     </ul>
     <div class="uk-navbar-flip">
         <ul class="uk-navbar-nav">
+            <!--<li>
+                <form class="uk-form search-box" method="GET" action="/searchByDate">
+                    <input name="from" type="text" data-uk-datepicker="{format:'MM.DD.YYYY'}" placeholder="From date">
+                    <input name="until" type="text" data-uk-datepicker="{format:'MM.DD.YYYY'}" placeholder="Until date">   
+                    <input type="submit" value="Submit" class="uk-button ">
+                </form>
+            </li>-->
             <li>
-                <form class="uk-form search-box"  method="GET" action="/" >
-                  <input class="uk-form-row" type="text" name="search" placeholder="Search...">  
-                  <input type="submit" value="Submit" class="uk-button ">
+                <form class="uk-form search-box"  method="GET" action="/search" >
+                    <input name="from" type="text" data-uk-datepicker="{format:'MM.DD.YYYY'}" placeholder="From date">
+                    <input name="until" type="text" data-uk-datepicker="{format:'MM.DD.YYYY'}" placeholder="Until date"> 
+                    <input class="uk-form-row" type="text" name="search" placeholder="Search...">  
+                    <input type="submit" value="Submit" class="uk-button ">
                 </form>
             </li>
         </ul>          

@@ -1,7 +1,12 @@
+
+const uuidv1 = require('uuid/v1');
+const moment = require('moment');
+const bcrypt = require('bcrypt');
+
 const repositoryUsers = require('./repositorys/users');
 const repositoryPosts = require('./repositorys/posts');
-const expressValidator = require('express-validator');
-const bcrypt = require('bcrypt');
+
+const helper = require('mongoskin').helper;
 
 const saltRounds = 10;
 const router = require('./router');
@@ -19,82 +24,97 @@ const encryptPassword = (password) => {
 }
 
 //GET requests
-const getHome = (query) => {
-    if(query){     
-        return Promise.all([repositoryPosts.findSearchTitles(query), repositoryPosts.findSearchComments(query)])
-        .then(([postsWithTitle, postsWithUserName]) => {
-            return postsWithTitle.concat(postsWithUserName)
-        })
-        .catch(err => { reject(err)})               
-    } else {
-       return repositoryPosts.findAll()
+const getHome = () => {
+    return repositoryPosts.findAll()
+}
+
+const getSearch = (query, from, until) => {
+    from = moment.utc(from, "MM.DD.YYYY").toDate();
+    until = moment.utc(until, "MM.DD.YYYY").toDate();
+
+    if (!moment(from).isValid()){
+        from = null
+    }
+    if (!moment(until).isValid()){
+        until = null
     }
     
+    return  repositoryPosts.search( from, until, query);
 }
 
 const getPost = (postId) => { 
     return repositoryPosts.findOne(postId)   
 }
 
-//POST requests 
-const postNewPost = (data) => {
+const getComment = (commentId) => { 
+    return repositoryPosts.findOneComment(commentId)
+
+}
+
+const postNewPost = (data, user) => {
+    data.userName = user.userName;
     data.createdAt = new Date();
-    return repositoryPosts.insert(data);
+    data.updatedAt = new Date();
+    return repositoryPosts.insertPost(data, user._id);
 }
 
-const postComment = (comment) => {
+const postComment = (comment, user) => {
+    postId = comment.id
+    comment.id = uuidv1();
+    comment.creatorId = user._id;
+    comment.userName = user.userName;
     comment.createdAt = new Date();
-    return repositoryPosts.update(comment)
+    comment.updatedAt = new Date();
+    return repositoryPosts.insertComment(comment, postId)
 }
 
-const postRegister = (req) => {
-    const user = {};
+const postEditComment = (data, userId) => {
+    data.updatedAt = new Date();
+    return repositoryPosts.editComment(data, userId)
+}
 
-    return new Promise((resolve, reject) => {
-      req.checkBody('userName', 'Username field cannot be empty.').notEmpty();
-      req.checkBody('userName', 'Username must be between 4-15 characters long.').len(4, 15);
-      req.checkBody('userName', 'Username can only contain letters, numbers, or underscores.').matches(/^[A-Za-z0-9_-]+$/, 'i');
-      req.checkBody('email', 'The email you entered is invalid, please try again.').isEmail();
-      req.checkBody('email', 'Email address must be between 4-100 characters long, please try again.').len(4, 100);
-      req.checkBody('password', 'Password must be between 8-100 characters long.').len(5, 100);
-      req.checkBody("password", "Password must include one lowercase character, one uppercase character, a number, and a special character.")
-      .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.* )(?=.*[^a-zA-Z0-9]).{5,}$/, "i");
-      req.checkBody('passwordMatch', 'Password must be between 8-100 characters long.').len(5, 100);
-      req.checkBody('passwordMatch', 'Passwords do not match, please try again.').equals(req.body.password);   
-     
+const postEditPost = (data, userId) => {
+    data.updatedAt = new Date();
+    return repositoryPosts.editPost(data, userId);
+}
 
-      var errors = req.validationErrors();
+const postDeletePost = (postId, userId) => {
+    return repositoryPosts.deletePost(postId, userId)
+}
 
-      if(errors){
-        reject(errors)        
-     } else {
-        user.userName = req.body.userName;
-        user.email = req.body.email;
-        repositoryUsers.findOne(user.email)
-        .then(result=>{
-            if(result){
-                reject(errors= [{msg:'Email already exist'}])
-            }
-        });
-        user.createdAt = new Date();
-        user.password = encryptPassword(req.body.password)
-        .then(result => {
-            user.password = result
-            resolve(repositoryUsers.register(user)) 
-        });           
-     }
- })
-   
-    
+const postDeleteComment = (commentId, userId) => {
+    return repositoryPosts.deleteComment(commentId, userId)
+}
+
+const postRegister = (user) => {
+   return repositoryUsers.findOne(user.email)   
+    .then(result=>{
+        if(result){
+            return Promise.reject("This email already used") 
+        }  else{
+            user.createdAt = new Date()
+            encryptPassword(user.password)                    
+            .then( encryptedPassword => {
+                user.password = encryptedPassword
+                return repositoryUsers.register(user)  
+            })            
+        }
+    })    
 }
 
 
 
 module.exports = {
     getHome,
+    getSearch,
     getPost,
+    getComment,
     postComment,
+    postEditComment,
+    postDeleteComment,
     postNewPost,
+    postEditPost,
+    postDeletePost,
     postRegister,
     encryptPassword
-};
+}

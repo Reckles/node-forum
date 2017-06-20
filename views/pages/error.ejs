@@ -5,20 +5,15 @@
         <% include ../partials/head %>
     </head>
     <body>
+         <div style="min-height:100vh;margin-bottom:10vh;">
         <header>
             <% include ../partials/header %>
         </header>
-        <h2>Error Page</h2>
-        <ol>
-            <% if(errors){%>          
-             <% errors.forEach(function(err){%>
-              <li>
-                <%= err.msg%>
-              </li>
-            <%})%>
-            <%}%>
-        </ol>
+        <div style="height: 70vh;">
+            <h2>Error Page</h2>
+        </div>
         <script src="/js/jquery-3.2.1.min.js"></script>
         <% include ../partials/footer%>
+        </div>
     </body>
 </html>

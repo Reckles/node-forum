@@ -3,52 +3,88 @@
 <html>
     <head>
         <% include ../partials/head %>
-        <script src="js/pages/post.js"></script>
     </head>
     <body>
+         <div style="min-height:100vh;margin-bottom:10vh;">
         <header>
-            <% include ../partials/header %>
+            <% include ../partials/header%>
+            <br>
         </header>
-
-        <div class="post-box">
-                    <h4>
-                        <%= post.userName %>
-                    </h4>           
-                    <div class="post-body">
-                        <h3>
-                            <%= post.title %>
-                        </h3>
-                        <p>
-                            <%= post.text %>
-                        </p>
-                    </div>
-                    <h6>
-                        <%= post.createdAt %>
-                    </h6>
-                    <div class="post-comments">
-                        <h4>Comments</h4>
-                            <ul>                         
-                              <% if(post.comments != null){ post.comments.reverse().forEach(function(comment){%>
-                                    <li>
-                                      <div class="comment-box">
-                                        <h5>
-                                            <%= comment.userName%>
-                                        </h5>
-                                        <h4><%= comment.title%></h4>
-                                        <p><%= comment.text%></p>
-                                        <h6><%= comment.createdAt%></h6>
-                                        </div>
-                                   </li>
-                              <% })};%>                         
-                           </ul>
-                    </div>
-                    <div class="post-footer">
-                        <button  onclick="newPost('<%= post._id%>')" >Leave a comment</button>
-                         <a href="/"><button>Go back</button></a>
+        <% if(post){%>  
+        <% include ../partials/modalMessageBox%> 
+        <button id="btnNewComment" style="margin:-1vh 0 1vh 13.4vw;" class="uk-button uk-button-success" onclick="newComment('<%= post._id%>')"> 
+         Leave a comment
+        </button>  
+            <div class="uk-flex uk-grid ">
+                <div class="uk-flex-order-first uk-container uk-container-center">
+                    <div class="post-main-box">       
+                        <article style="max-height: 22vh;" class="uk-comment uk-clearfix ">  
+                                <div class="post-avatar-box">
+                                     <img  class="uk-comment-avatar post-avatar" src="" alt="IMG">
+                                </div>  
+                            <header class="uk-comment-header  uk-flex uk-flex-column">                            
+                                <h3 class="uk-comment-title"><%= post.userName %></h3>
+                                <p class="uk-comment-title"><%= post.title %></p>
+                                <div  class="uk-comment-body post-text"><%= post.text %></div>
+                            </header>
+                        </article>
+                        <div class="post-buttons">
+                            <h6 style="font-size: 10px;margin:0 0 1vh 2vw;" class="uk-comment-meta">
+                                Posted 
+                                <time class="timeago" datetime="<%=  (new Date(post.createdAt)).getTime()%>"></time ><%= post.createdAt%>, 
+                                <%= post.comments?post.comments.length:'0'%> Comments 
+                                </h6>
+                            <button class="uk-button uk-button-primary uk-button-small" onclick="newComment('<%= post._id%>')" >
+                            Leave a comment</button>
+                            <% if(post.creatorId.toString() === user._id){%>
+                            <button class="uk-button uk-button-primary uk-button-small" onclick="editPost('<%= post._id%>')">
+                            Edit post</button>
+                            <button class="uk-button uk-button-primary uk-button-small" onclick="deletePost('<%= post._id%>')" >
+                            Delete post</button>
+                            <% }%>  
+                        </div> 
                     </div>
                 </div>
-
-        <script src="/js/jquery-3.2.1.min.js"></script>
-        <% include ../partials/footer%>
+                <div  class="uk-align-medium-right post-comments ">
+                <% if(post.comments){%>
+                    <%post.comments.forEach(function(comment){%>
+    <div style class="uk-container-center uk-container post-comments-box">
+                    <div class="commenters-main-box  post-comment">       
+                        <article style="max-height: 22vh;" class="uk-comment uk-clearfix ">  
+                                <div class="post-avatar-box">
+                                     <img  class="uk-comment-avatar post-avatar" src="" alt="IMG">
+                                </div>  
+                            <header class="uk-comment-header  uk-flex uk-flex-column">                            
+                                <h3 class="uk-comment-title"><%= comment.userName %></h3>
+                                <p class="uk-comment-title"><%= comment.title %></p>
+                                <div  class="uk-comment-body comment-text"><%= comment.text %></div>
+                            </header>
+                        </article>
+                        <div class="scroll-hider"></div>
+                        <div class="comments-buttons">
+                            <h6 style="font-size: 10px;margin:0 0 1vh 2vw;" class="uk-comment-meta">
+                                Posted 
+                                <time class="timeago" datetime="<%= (new Date(comment.createdAt)).getTime()%>"></time ><%= comment.createdAt%>, 
+                                </h6>
+                            <% if(comment.creatorId.toString() === user._id){%>
+                            <button class="uk-button uk-button-primary uk-button-small" onclick="editComment('<%= comment.id%>')">
+                            Edit comment</button>
+                            <button class="uk-button uk-button-primary uk-button-small" onclick="deleteComment('<%= comment.id%>')" >
+                            Delete comment</button>
+                            <% }%>  
+                        </div> 
+                    </div>
+                    </div>
+                    <% })%>
+                <% }%>
+                </div> 
+            </div>     
+        <% } else {%>   
+            <script> window.location.replace(`/`) </script>
+        <% }%>  
+        </div>                       
+            <footer>
+        <% include ../partials/footer %>
+    </footer>
     </body>
 </html>

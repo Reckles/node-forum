@@ -1,30 +1,38 @@
 <!DOCTYPE html>
 
-<html>
+<html class="uk-height-1-1">
     <head>
         <% include ../partials/head %>
     </head>
-    <body>
-        <header>
-            <% include ../partials/header %>
-        </header>
-        <h2><%= title%></h2>
-        <div>
-            <form method="POST" action="/login">
-                <div>
-                    <h6>Email :</h6>
-                    <input type="text" name="username" placeholder="Email">
-                </div>
-                <div>
-                    <h6>Password :</h6>
-                    <input type="password" name="password" placeholder="Password">
-                </div>
-                <br>
-                <input type="submit" value="Login">
-            </form>
-        </div>
 
-        <script src="/js/jquery-3.2.1.min.js"></script>
-        <% include ../partials/footer%>
+    <body class="uk-height-1-1">
+         <header>
+            <% include ../partials/header %>
+        </header> 
+        <div class="uk-panel uk-panel-box uk-form uk-vertical-align uk-text-center uk-height-1-1">
+            <div class=" uk-vertical-align-middle" style="width: 300px;">
+                <form class="uk-panel uk-panel-box uk-form" method="POST" action="/login">
+                    <div id="loginError" style="display:none;" class="uk-alarm uk-container">
+                        <div class="uk-alert uk-alert-warning uk-container-center">
+                            Wrong username or password !
+                        </div> 
+                    </div>
+                    <h2><%= title%></h2>
+                    <div class="uk-form-row">
+                        <input class="uk-width-4-2 uk-form-large" type="text" name="username" placeholder="Email">
+                    </div>
+                    <div class="uk-form-row">
+                        <input class="uk-width-4-2 uk-form-large" type="password" name="password" placeholder="Password">
+                    </div>
+                    <div class="uk-form-row">
+                        <input style="color:#ffffff" class="uk-width-1-2 uk-button uk-button-success uk-button-large" type="submit" value="Login">
+                    </div>
+                </form>
+
+            </div>
+        </div>
+        <footer >
+        <% include ../partials/footer %>
+    </footer> 
     </body>
 </html>

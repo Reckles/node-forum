@@ -55,7 +55,11 @@ const postNewPost = (data, user) => {
     data.userName = user.userName;
     data.createdAt = new Date();
     data.updatedAt = new Date();
-    return repositoryPosts.insertPost(data, user._id);
+
+    return repositoryPosts.insertPost(data, user._id)
+    .then((result)=>{
+        return result.result.n === 1 ? result.ops[0] : null
+    })
 }
 
 const postComment = (comment, user) => {
@@ -65,7 +69,9 @@ const postComment = (comment, user) => {
     comment.userName = user.userName;
     comment.createdAt = new Date();
     comment.updatedAt = new Date();
+
     return repositoryPosts.insertComment(comment, postId)
+    .then(result=> {return comment } )  
 }
 
 const postEditComment = (data, userId) => {
@@ -80,7 +86,13 @@ const postEditPost = (data, userId) => {
 
 const postDeletePost = (postId, userId) => {
     return repositoryPosts.deletePost(postId, userId)
+    .then((posts)=>{
+        return getHome()
+    })
 }
+// const postDeletePost = (postId, userId) => {
+//     return repositoryPosts.deletePost(postId, userId)
+// }
 
 const postDeleteComment = (commentId, userId) => {
     return repositoryPosts.deleteComment(commentId, userId)

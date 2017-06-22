@@ -50,8 +50,8 @@ router.get('/comment/:id/edit', ensureAuthenticated, (req, res) => {
         //POST
 router.post('/', (req,res) => {
     logic.postNewPost(req.body.data, req.user)
-    .then(resulte => {
-         res.status(200).send();    
+    .then(result => {
+         res.send(result);    
     }).catch(err => {
          res.status(404).send()
     })
@@ -69,8 +69,8 @@ router.post('/:id/edit', (req, res) => {
 
 router.post('/:id/delete', (req, res) => {
     logic.postDeletePost(req.params.id, req.user&&req.user._id)
-    .then(result => {
-        res.status(200).send();  
+    .then(posts => { 
+        res.status(200).send()
     })
     .catch(err => {
         res.status(404).send()
@@ -80,7 +80,7 @@ router.post('/:id/delete', (req, res) => {
 router.post('/:id/comment', (req, res) => {
     logic.postComment(req.body.data, req.user)   
     .then(result =>{
-        res.status(200).send();
+        res.send(result);
     })  
     .catch(err => {
         res.status(404).send()

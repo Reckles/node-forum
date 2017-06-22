@@ -3,7 +3,6 @@ const moment = require('moment');
 
 const helper = require('mongoskin').helper;
 
-
 const findAll = () => {
     return new Promise((resolve, reject) => {
       db.find().sort({
@@ -76,12 +75,37 @@ const findOneComment = (commentId) => {
     });
 }
 
+// const insertComment = (comment, postId) => {
+//     comment.creatorId = helper.toObjectID(comment.creatorId) 
+    
+//     return new Promise((resolve, reject) => {
+//         db.update({
+//             _id: helper.toObjectID(postId)
+//         }, {
+//             $push: {comments: comment},
+//             $set: {
+//                 updatedAt: comment.updatedAt
+//             }
+//         }, (err, result) => {
+//             if(err) {
+//                 reject(err)
+//             } else {
+//                 resolve(result)
+//             }
+//         });
+//     });
+// }
 const insertComment = (comment, postId) => {
     comment.creatorId = helper.toObjectID(comment.creatorId) 
-    
+
     return new Promise((resolve, reject) => {
-        db.update({_id: helper.toObjectID(postId)}, {
-            $push: {comments: comment}
+        db.update({
+            _id: helper.toObjectID(postId)
+        }, {
+            $push: {comments: comment},
+            $set: {
+                updatedAt: comment.updatedAt
+            }
         }, (err, result) => {
             if(err) {
                 reject(err)
@@ -100,7 +124,7 @@ const insertPost = (data, userId) => {
             title: data.title,
             text: data.text,
             createdAt: data.createdAt, 
-            updatedAt: data.updatedAt        
+            updatedAt: data.updatedAt     
         },(err, result) => {
             if(err) {
                 reject(err)
@@ -120,7 +144,7 @@ const editPost = (data, userId) => {
             $set: {
                 title: data.title,
                 text: data.text,
-                updatedAt: data.updatedAt
+                editedAt: data.updatedAt
             },
         }, (err, result)=>{
             if(err){
@@ -141,7 +165,7 @@ const editComment = (data, userId) => {
             $set: {
                 "comments.$.title": data.title,
                 "comments.$.text": data.text,
-                "comments.$.updatedAt": data.updatedAt
+                "comments.$.editedAt": data.updatedAt
             },
         }, (err, result)=>{
             if(err){

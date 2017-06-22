@@ -71,7 +71,7 @@ router.post('/register', (req, res)=>{
         req.checkBody('passwordMatch', 'Password must be between 8-100 characters long.').len(5, 100);
         req.checkBody('passwordMatch', 'Passwords do not match, please try again.').equals(req.body.password);   
 
-        var errors = req.validationErrors();
+        let errors = req.validationErrors();
         
         if(!errors){
             logic.postRegister(req.body)

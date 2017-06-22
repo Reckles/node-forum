@@ -30,10 +30,9 @@
                         </article>
                         <div class="post-buttons">
                             <h6 style="font-size: 10px;margin:0 0 1vh 2vw;" class="uk-comment-meta">
-                                Posted 
-                                <time class="timeago" datetime="<%=  (new Date(post.createdAt)).getTime()%>"></time ><%= post.createdAt%>, 
+                                <span class="timeago" data-time="<%= (new Date(post.createdAt)).getTime()%>"></span> 
                                 <%= post.comments?post.comments.length:'0'%> Comments 
-                                </h6>
+                            </h6>
                             <button class="uk-button uk-button-primary uk-button-small" onclick="newComment('<%= post._id%>')" >
                             Leave a comment</button>
                             <% if(post.creatorId.toString() === user._id){%>
@@ -63,9 +62,8 @@
                         <div class="scroll-hider"></div>
                         <div class="comments-buttons">
                             <h6 style="font-size: 10px;margin:0 0 1vh 2vw;" class="uk-comment-meta">
-                                Posted 
-                                <time class="timeago" datetime="<%= (new Date(comment.createdAt)).getTime()%>"></time ><%= comment.createdAt%>, 
-                                </h6>
+                                <span class="timeago" data-time="<%= (new Date(comment.createdAt)).getTime()%>"></span> 
+                            </h6>
                             <% if(comment.creatorId.toString() === user._id){%>
                             <button class="uk-button uk-button-primary uk-button-small" onclick="editComment('<%= comment.id%>')">
                             Edit comment</button>
